@@ -12,18 +12,15 @@
         margin: 10px;
         white-space: nowrap;
       }
-
       h1 {
         font-size: 15px;
 		text-align: center;
       }
-
       #container {
         align-items: center;
         display: block;
         justify-content: space-between;
       }
-
 	  .wrapper {
 		text-align: center;
 	  }
@@ -41,7 +38,7 @@
 		/*border-radius: 15px;
 		box-shadow: 0 9px #999;*/
 		}
-		
+
 		.button-blue {
 		display: inline-block;
 		padding: 10px 10px;
@@ -56,23 +53,21 @@
 		/*border-radius: 15px;
 		box-shadow: 0 9px #999;*/
 		}
-		
+
 		<!--.disabled:hover {background-color: #3e8e41}
 		.blue:hover (background-color: #6090e8)
 	  }
-	  
+
 	.blue {
 		background-color: cornflowerblue;
 	  }
-
 	.button.disabled:hover {background-color: #3e8e41}
-	
+
 	.button.blue:hover (background-color: #6090e8)
-	
+
 	.button blue:hover {
 		background-color: corflowerblue;
 	  }-->
-
 	.button:active {
 		background-color: #3e8e41;
 		box-shadow: 0 5px #666;
@@ -96,42 +91,56 @@
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
     -->
     <script src="popup.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!--script type="text/javascript" src="https://rawgit.com/ethereum/web3.js/0.19.0/dist/web3.js"></script-->
 	<script>
-	var time = 0;
 	function enable() {
     var element = document.getElementById("toRemove");
     element.classList.remove("disabled");
-	function othername() {
-    var input = document.getElementById("userInput").value;
-    //alert(input);
 	}
-	}
-	$(document).ready(function(){
-    function codeAddress() {
-        time = document.getElementById("userInput").value;
-		console.log(time);
-    }
-    $("time-submit").click(codeAddress);
-	});
+
+  function performTransaction() {
+    var THE_BUTTON_CONTRACT_ABI = [{"constant":true,"inputs":[],"name":"lastPress","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"pressTimes","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"expectLastPress","type":"uint256"}],"name":"press","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"timeLimit","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"timeLimit_","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"pressedBy","type":"address"},{"indexed":false,"name":"time","type":"uint256"}],"name":"ButtonPress","type":"event"}];
+
+    var TheButton = web3.eth.contract(THE_BUTTON_CONTRACT_ABI);
+    var theButton = TheButton.at(window.contractAddress);
+
+    var account = web3.eth.accounts[0];
+
+    theButton.press(0, {from: account}, (err, txID) => {
+      if (err) return reject(err);
+      resolve(txID);
+    });
+  }
+
+  chrome.tabs.query({
+      active: true,
+      currentWindow: true
+  }, function(tabs) {
+      var tabURL = tabs[0].url;
+      console.log(tabURL);
+  });
+
+  function checkFacebook() {
+      alert("You will be making a donation to a charity because you went on Facebook!");
+      window.setTimeout(performTransaction(), 120000);
+  }
+
+
+
 	</script>
-  </head>
+    </head>
 
   <body>
     <h1>Choose Study Time</h1>
     <div id="container">
 		<div class = "wrapper">
-			<button id="toRemove" class="button" style="margin-bottom: 5px;">Start</button>
+			<button id="toRemove" class="button disabled" style="margin-bottom: 5px;" onclick="checkFacebook()">Start</button>
 		</div>
-		<div class = "wrapper">
-	<button id="15" class="button-blue" onclick="enable()">15 min</button>
-	<button id="30" class="button-blue" onclick="enable()">30 min</button>
-	<button id="45" class="button-blue" style="margin-bottom: 5px;" onclick="enable()">45 min</button>
-		</div>
-	<form id="form" onsubmit="return false;">
-    <input type="text" id="userInput" />
-	<input type="submit" id="time-submit" />
-	</form>
+    <div class="wrapper">
+	<button class="button-blue" onclick="enable()">15 min</button>
+	<button class="button-blue" onclick="enable()">30 min</button>
+	<button class="button-blue" onclick="enable()">45 min</button>
+</div>
       <!--span style = "margin-top: 10px;">Choose a color</span>
       <select id="dropdown">
         <option selected disabled hidden value=''></option>
