@@ -96,11 +96,24 @@
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
     -->
     <script src="popup.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script>
+	var time = 0;
 	function enable() {
     var element = document.getElementById("toRemove");
     element.classList.remove("disabled");
+	function othername() {
+    var input = document.getElementById("userInput").value;
+    //alert(input);
 	}
+	}
+	$(document).ready(function(){
+    function codeAddress() {
+        time = document.getElementById("userInput").value;
+		console.log(time);
+    }
+    $("time-submit").click(codeAddress);
+	});
 	</script>
   </head>
 
@@ -108,11 +121,17 @@
     <h1>Choose Study Time</h1>
     <div id="container">
 		<div class = "wrapper">
-			<button id="toRemove" class="button disabled" style="margin-bottom: 5px;">Start</button>
+			<button id="toRemove" class="button" style="margin-bottom: 5px;">Start</button>
 		</div>
-	<button class="button-blue" onclick="enable()">15 min</button>
-	<button class="button-blue" onclick="enable()">30 min</button>
-	<button class="button-blue" onclick="enable()">45 min</button>
+		<div class = "wrapper">
+	<button id="15" class="button-blue" onclick="enable()">15 min</button>
+	<button id="30" class="button-blue" onclick="enable()">30 min</button>
+	<button id="45" class="button-blue" style="margin-bottom: 5px;" onclick="enable()">45 min</button>
+		</div>
+	<form id="form" onsubmit="return false;">
+    <input type="text" id="userInput" />
+	<input type="submit" id="time-submit" />
+	</form>
       <!--span style = "margin-top: 10px;">Choose a color</span>
       <select id="dropdown">
         <option selected disabled hidden value=''></option>
